@@ -1,7 +1,9 @@
+install: install-deps
+
 develop:
 	npm run webpack-serve
 
-install:
+install-deps:
 	npm install
 
 build:
