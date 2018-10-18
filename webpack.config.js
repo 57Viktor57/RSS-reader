@@ -15,6 +15,38 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(s[ac]ss)$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'postcss-loader',
+            /* eslint-disable */
+            options: {
+              plugins: () => [
+                require('precss'),
+                require('autoprefixer'),
+              ],
+            },
+          },
+          {
+            loader: 'sass-loader',
+          }
+        ],
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+          }
+        ]
+      }
     ],
   },
   plugins: [

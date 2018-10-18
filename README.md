@@ -8,4 +8,4 @@
 
 # Surge
 
-[http://ossified-letters.surge.sh/](http://ossified-letters.surge.sh/)
+[hexlet-project.surge.sh](hexlet-project.surge.sh)
