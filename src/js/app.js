@@ -1,5 +1,5 @@
 import { watch } from 'melanke-watchjs';
-import { getForm, getInput } from './utils';
+import { getForm, getInput } from './renderUtils';
 import {
   renderNotValidInput,
   renderDuplicateError,
@@ -9,12 +9,12 @@ import {
   renderNewFeed,
   renderNewArticle,
 } from './renderers';
-import { states, updateState } from './state';
-import getParseRSS from './getParseRSS';
+import { formStates, getNewState } from './stateUtils';
+import getParsedRss from './dataLoader';
 
 export default () => {
   const state = {
-    formState: states.clean,
+    formState: formStates.clean,
     newFeedsUrl: '',
     feedsList: [],
     articlesList: [],
@@ -23,19 +23,19 @@ export default () => {
   const setupWatchers = () => {
     watch(state, 'formState', (_prop, _action, newState) => {
       switch (newState) {
-        case states.linkNotValid:
+        case formStates.linkNotValid:
           renderNotValidInput();
           break;
-        case states.duplicate:
+        case formStates.duplicate:
           renderDuplicateError();
           break;
-        case states.waiting:
+        case formStates.waiting:
           renderWaiting();
           break;
-        case states.linkIsValid:
+        case formStates.linkIsValid:
           renderIsValid();
           break;
-        case states.clean:
+        case formStates.clean:
           renderClean();
           break;
         default:
@@ -53,16 +53,16 @@ export default () => {
   };
 
   const setupHandlers = () => {
-    getInput().addEventListener('input', ({ target }) => Object.assign(state, updateState(target.value, state)));
+    getInput().addEventListener('input', ({ target }) => Object.assign(state, getNewState(target.value, state)));
     getForm().addEventListener('submit', (event) => {
       event.preventDefault();
-      if (state.formState !== states.linkIsValid) {
+      if (state.formState !== formStates.linkIsValid) {
         return;
       }
-      state.formState = states.waiting;
-      getParseRSS(state.newFeedUrl).then(data => ({ ...data, link: state.newFeedUrl }))
+      state.formState = formStates.waiting;
+      getParsedRss(state.newFeedUrl).then(data => ({ ...data, link: state.newFeedUrl }))
         .then((data) => {
-          state.formState = states.clean;
+          state.formState = formStates.clean;
           state.newFeedUrl = '';
           state.feedsList.push(data);
           const links = state.articlesList.map(({ link }) => link);
@@ -73,14 +73,6 @@ export default () => {
         }).catch((error) => { console.log(error); });
     });
   };
-  // const runUpdate = () => {
-  //
-  // };
-  const start = () => {
-    setupWatchers();
-    setupHandlers();
-    // runUpdate();
-  };
-
-  start();
+  setupWatchers();
+  setupHandlers();
 };

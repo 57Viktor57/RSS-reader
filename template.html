@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="Viktor">
+		<link href="https://fonts.googleapis.com/css?family=Mali:400,700" rel="stylesheet">
 		<title>RSS reader</title>
 	</head>
 	<body>
@@ -13,7 +14,7 @@
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h3 class="modal-title" id="exampleModalLabel">Описание</h3>
+		        <h3 class="modal-title" id="exampleModalLabel">Description</h3>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
@@ -37,7 +38,7 @@
           <div class="container">
             <div class="row">
               <div class="col-xl-7 mx-auto">
-                <h1 class="mb-4 text-left">RSS Reader for you.</h1>
+                <h1 class="mb-4 text-left" id="title">RSS Reader for you.</h1>
             	</div>
             <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
             <form id="form">
@@ -58,13 +59,17 @@
       <div class="row justify-content-center">
         <div class="col-lg-3">
           <h3>RSS Feeds</h3>
-          <div id="feeds-list"></div>
+          <div id="feeds-list">
+
+          </div>
           <!-- end feeds list -->
         </div>
 
         <div class="col-lg-9">
           <h3>Topics</h3>
-          <div id="articles"></div>
+          <div id="articles">
+          	
+          </div>
           <!-- end topics list -->
         </div>
       </div>

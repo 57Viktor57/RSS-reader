@@ -1,71 +1,112 @@
 import $ from 'jquery';
+import {
+  getInput,
+  getButton,
+  getFeeds,
+  getArticles,
+  getFeedsContainer,
+  getFeedbackElem,
+} from './renderUtils';
+
+const removeFeedbackElem = () => {
+  const feedback = getFeedbackElem();
+  if (feedback) {
+    feedback.remove();
+  }
+};
 
 export const renderNotValidInput = () => {
-  $('#input').addClass('is-invalid');
-  $('#feedbackElement').remove();
+  getInput().classList.add('is-invalid');
+  removeFeedbackElem();
 };
 
 export const renderDuplicateError = () => {
-  $('#input').addClass('is-invalid');
-  $('#feedbackElement').remove();
-  const elem = $('<div>').attr({
-    class: 'text-left mt-3',
-    id: 'feedbackElement',
-  }).text('You are already have this feed.');
-  $('#input').after(elem);
+  const input = getInput();
+  input.classList.add('is-invalid');
+  removeFeedbackElem();
+  const elem = document.createElement('div');
+  elem.append(document.createTextNode('You are already have this feed.'));
+  elem.classList.add('text-left', 'mt-3');
+  elem.id = 'feedbackElement';
+  input.parentNode.insertBefore(elem, input.nextSibling);
 };
 
 export const renderWaiting = () => {
-  $('#feedbackElement').remove();
-  const elem = $('<div>').attr({
-    id: 'feedbackElement',
-    class: 'text-left mt-3',
-  }).text('Loading... Please wait.');
-  $('#input').after(elem);
-  $('#input').attr('disabled', true);
-  $('#button').attr('disabled', true);
+  const input = getInput();
+  const button = getButton();
+  input.setAttribute('disabled', true);
+  button.setAttribute('disabled', true);
+  input.classList.remove('is-invalid');
+  removeFeedbackElem();
+  const elem = document.createElement('div');
+  elem.append(document.createTextNode('Loading... Please wait.'));
+  elem.classList.add('text-left', 'mt-3');
+  elem.id = 'feedbackElement';
+  input.parentNode.insertBefore(elem, input.nextSibling);
 };
 
 export const renderIsValid = () => {
-  $('#input').removeClass('is-invalid');
+  getInput().classList.remove('is-invalid');
 };
 
 export const renderClean = () => {
-  $('#feedbackElement').remove();
-  $('#input').removeClass('is-invalid').removeAttr('disabled', true).val('');
-  $('#button').removeAttr('disabled', true);
+  removeFeedbackElem();
+  const input = getInput();
+  const button = getButton();
+  input.classList.remove('is-invalid');
+  input.setAttribute('value', '');
+  input.removeAttribute('disabled');
+  button.removeAttribute('disabled');
 };
 
 
 export const renderNewFeed = ({ title, description }) => {
-  $('#feeds').removeClass('d-none');
-  $('#feeds-list').append('<div>').append(
-    $('<h4>').append(title),
-    $('<p>').append(description),
-  );
+  getFeedsContainer().classList.remove('d-none');
+  const feeds = getFeeds();
+  const elem = document.createElement('div');
+  const h4 = document.createElement('h4');
+  h4.append(document.createTextNode(title));
+  const p = document.createElement('p');
+  p.append(document.createTextNode(description));
+  elem.append(h4, p);
+  feeds.append(elem);
 };
 
 export const renderNewArticle = ({ title, link, description }) => {
-  $('#feeds').removeClass('d-none');
-  $('#articles').append(
-    $('<div class="row mt-3">').append(
-      $('<div class="col-lg-8">').append(
-        $('<a>').attr('href', link).append(
-          $('<span>').append(title),
-        ),
-      ),
-      $('<div class="col-lg-4">').append(
-        $('<button>').attr({
-          type: 'button',
-          class: 'btn btn-primary btn-sm',
-          'data-toggle': 'modal',
-          'data-target': '#myModal',
-        }).on('click', (ev) => {
-          ev.preventDefault();
-          $('#modalBody').text(description);
-          $('#myModal').modal('show');
-        }).append('Description'),
-      ),
-    ),
-  );
+  getFeedsContainer().classList.remove('d-none');
+  const articles = getArticles();
+  const modalBody = document.getElementById('modalBody');
+
+  const row = document.createElement('div');
+  row.classList.add('row', 'mt-3');
+
+  const firstCol = document.createElement('div');
+  firstCol.classList.add('col-lg-8');
+
+  const a = document.createElement('a');
+  a.setAttribute('href', link);
+
+  const span = document.createElement('span');
+  span.append(document.createTextNode(title));
+
+  const secondCol = document.createElement('div');
+  secondCol.classList.add('col-lg-4');
+
+  const button = document.createElement('button');
+  button.append(document.createTextNode('Description'));
+  button.classList.add('btn', 'btn-primary', 'btn-sm');
+  button.setAttribute('data-toggle', 'modal');
+  button.setAttribute('data-target', '#myModal');
+  button.setAttribute('type', 'button');
+  button.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    modalBody.append(document.createTextNode(description));
+    $('#myModal').modal('show');
+  });
+
+  a.append(span);
+  firstCol.append(a);
+  secondCol.append(button);
+  row.append(firstCol, secondCol);
+  articles.append(row);
 };

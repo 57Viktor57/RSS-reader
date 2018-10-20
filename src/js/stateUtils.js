@@ -1,6 +1,6 @@
 import isURL from 'validator/lib/isURL';
 
-export const states = Object.freeze({
+export const formStates = Object.freeze({
   clean: 'clean',
   linkIsValid: 'isValid',
   linkNotValid: 'notValid',
@@ -13,16 +13,17 @@ const isLinkExist = (url, state) => {
   return links.has(url);
 };
 
-export const updateState = (inputData, state) => {
+export const getNewState = (inputData, state) => {
   const newState = { newFeedUrl: inputData };
   if (!inputData) {
-    newState.formState = states.clean;
+    newState.formState = formStates.clean;
     return newState;
   }
   if (isURL(inputData)) {
-    newState.formState = isLinkExist(inputData, state) ? states.duplicate : states.linkIsValid;
+    newState.formState = isLinkExist(inputData, state)
+      ? formStates.duplicate : formStates.linkIsValid;
   } else {
-    newState.formState = states.linkNotValid;
+    newState.formState = formStates.linkNotValid;
   }
   return newState;
 };

@@ -4,3 +4,4 @@ export const getFeeds = () => document.getElementById('feeds-list');
 export const getArticles = () => document.getElementById('articles');
 export const getForm = () => document.getElementById('form');
 export const getFeedsContainer = () => document.getElementById('feeds');
+export const getFeedbackElem = () => document.getElementById('feedbackElement');
