@@ -8,4 +8,4 @@
 
 # Surge
 
-[hexlet-project.surge.sh/](hexlet-project.surge.sh/)
+[Link](http://hexlet-project.surge.sh)
