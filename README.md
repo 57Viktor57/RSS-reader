@@ -15,7 +15,7 @@ If URL is invalid or duplicated or application has some error you will see feedb
 
 ## Contact
 
-This application is a third project for [Hexlet IO](https://ru.hexlet.io). Thank you very much for realy intarasting and usful activity.
+This application is a third project for [Hexlet IO](https://ru.hexlet.io). Thank you very much for really interesting and useful activity.
 
 Created by Viktor Kugay.
 
