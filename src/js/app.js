@@ -21,7 +21,7 @@ export default () => {
     newFeedsUrl: '',
     feedsList: [],
     articlesList: [],
-    errors: null,
+    error: null,
   };
 
   const setupWatchers = () => {
@@ -54,8 +54,8 @@ export default () => {
       const articles = state.articlesList.slice(start);
       articles.forEach(article => renderNewArticle(article));
     });
-    watch(state, 'errors', (_prop, _action, error) => {
-      renderErrorFeedback(error);
+    watch(state, 'error', () => {
+      renderErrorFeedback();
     });
   };
 
@@ -82,7 +82,7 @@ export default () => {
           state.feedsList.push(data);
           addArticles(data.articles);
         }).catch((error) => {
-          state.errors = new Error(error);
+          state.error = error;
         });
     });
   };
