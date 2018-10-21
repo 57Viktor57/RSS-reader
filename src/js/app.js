@@ -8,9 +8,12 @@ import {
   renderClean,
   renderNewFeed,
   renderNewArticle,
+  renderErrorFeedback,
 } from './renderers';
 import { formStates, getNewState } from './stateUtils';
 import getParsedRss from './dataLoader';
+
+const timerDelay = 5000;
 
 export default () => {
   const state = {
@@ -18,6 +21,7 @@ export default () => {
     newFeedsUrl: '',
     feedsList: [],
     articlesList: [],
+    errors: null,
   };
 
   const setupWatchers = () => {
@@ -50,6 +54,17 @@ export default () => {
       const articles = state.articlesList.slice(start);
       articles.forEach(article => renderNewArticle(article));
     });
+    watch(state, 'errors', (_prop, _action, error) => {
+      renderErrorFeedback(error);
+    });
+  };
+
+  const addArticles = (articles) => {
+    const links = state.articlesList.map(({ link }) => link);
+    const unicLinks = articles.filter(({ link }) => !links.includes(link));
+    if (unicLinks.length !== 0) {
+      state.articlesList.push(...unicLinks.reverse());
+    }
   };
 
   const setupHandlers = () => {
@@ -65,14 +80,28 @@ export default () => {
           state.formState = formStates.clean;
           state.newFeedUrl = '';
           state.feedsList.push(data);
-          const links = state.articlesList.map(({ link }) => link);
-          const unicLinks = data.articles.filter(({ link }) => !links.includes(link));
-          if (unicLinks.length !== 0) {
-            state.articlesList.push(...unicLinks);
-          }
-        }).catch((error) => { console.log(error); });
+          addArticles(data.articles);
+        }).catch((error) => {
+          state.errors = new Error(error);
+        });
     });
+  };
+
+  const updateFeeds = () => {
+    const feedsLink = state.feedsList.map(({ link }) => link);
+    if (feedsLink.length === 0) {
+      setTimeout(updateFeeds, timerDelay);
+      return;
+    }
+
+    Promise.all(feedsLink.map(getParsedRss))
+      .then(feeds => feeds.forEach(feed => addArticles(feed.articles)))
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setTimeout(updateFeeds, timerDelay));
   };
   setupWatchers();
   setupHandlers();
+  updateFeeds();
 };

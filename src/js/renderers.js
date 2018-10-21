@@ -24,9 +24,9 @@ export const renderDuplicateError = () => {
   const input = getInput();
   input.classList.add('is-invalid');
   removeFeedbackElem();
-  const elem = document.createElement('div');
+  const elem = document.createElement('small');
   elem.append(document.createTextNode('You are already have this feed.'));
-  elem.classList.add('text-left', 'mt-3');
+  elem.classList.add('form-text', 'text-muted', 'text-left');
   elem.id = 'feedbackElement';
   input.parentNode.insertBefore(elem, input.nextSibling);
 };
@@ -38,9 +38,9 @@ export const renderWaiting = () => {
   button.setAttribute('disabled', true);
   input.classList.remove('is-invalid');
   removeFeedbackElem();
-  const elem = document.createElement('div');
+  const elem = document.createElement('small');
   elem.append(document.createTextNode('Loading... Please wait.'));
-  elem.classList.add('text-left', 'mt-3');
+  elem.classList.add('form-text', 'text-muted', 'text-left');
   elem.id = 'feedbackElement';
   input.parentNode.insertBefore(elem, input.nextSibling);
 };
@@ -49,13 +49,27 @@ export const renderIsValid = () => {
   getInput().classList.remove('is-invalid');
 };
 
+export const renderErrorFeedback = () => {
+  const input = getInput();
+  const button = getButton();
+  input.removeAttribute('disabled', true);
+  button.removeAttribute('disabled', true);
+  input.classList.add('is-invalid');
+  removeFeedbackElem();
+  const elem = document.createElement('small');
+  elem.append(document.createTextNode('Loading error.'));
+  elem.classList.add('form-text', 'text-muted', 'text-left');
+  elem.id = 'feedbackElement';
+  input.parentNode.insertBefore(elem, input.nextSibling);
+};
+
 export const renderClean = () => {
   removeFeedbackElem();
   const input = getInput();
   const button = getButton();
   input.classList.remove('is-invalid');
-  input.setAttribute('value', '');
   input.removeAttribute('disabled');
+  input.value = '';
   button.removeAttribute('disabled');
 };
 
@@ -64,17 +78,15 @@ export const renderNewFeed = ({ title, description }) => {
   getFeedsContainer().classList.remove('d-none');
   const feeds = getFeeds();
   const elem = document.createElement('div');
-  const h4 = document.createElement('h4');
-  h4.append(document.createTextNode(title));
-  const p = document.createElement('p');
-  p.append(document.createTextNode(description));
-  elem.append(h4, p);
+  const html = `<h4>${title}</h4><p>${description}</p>`;
+  elem.innerHTML = html;
   feeds.append(elem);
 };
 
 export const renderNewArticle = ({ title, link, description }) => {
   getFeedsContainer().classList.remove('d-none');
   const articles = getArticles();
+  const { firstChild } = articles;
   const modalBody = document.getElementById('modalBody');
 
   const row = document.createElement('div');
@@ -103,10 +115,9 @@ export const renderNewArticle = ({ title, link, description }) => {
     modalBody.append(document.createTextNode(description));
     $('#myModal').modal('show');
   });
-
   a.append(span);
   firstCol.append(a);
   secondCol.append(button);
   row.append(firstCol, secondCol);
-  articles.append(row);
+  articles.insertBefore(row, firstChild);
 };
