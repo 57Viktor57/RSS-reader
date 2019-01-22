@@ -28,4 +28,4 @@ If URL is invalid or duplicated or application has some error you will see feedb
 ## Demo link
 
 [http://hexlet-project.surge.sh](http://hexlet-project.surge.sh)
-Heroku may delay starting application. If application don't start right now please wait half a minute and reload your page.
+Surge may delay starting application. If application don't start right now please wait half a minute and reload your page.

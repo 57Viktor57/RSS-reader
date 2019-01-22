@@ -4,7 +4,7 @@
   "description": "Viktor Kugay third project for Hexlet IO",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/57Viktor57/project-lvl3-s330"
+    "url": "git+https://github.com/57Viktor57/RSS-reader"
   },
   "scripts": {
     "webpack-serve": "webpack-serve",
